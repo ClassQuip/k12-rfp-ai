@@ -12,7 +12,7 @@
 - PDF text extraction via `pypdf` / `pdfplumber`
 - Structured extraction with Pydantic `RFPAnalysis` schemas
 - S3 uploads with dated key prefixes (`rfps/` and `pdfs/`)
-- Daily GitHub Actions workflow with AWS OIDC (no long-lived keys in CI)
+- Daily GitHub Actions workflow (AWS credentials via repository secrets)
 
 ## Quickstart
 
@@ -41,7 +41,7 @@ Relevant K-12 opportunities are printed as JSON to stdout. Set `SKIP_S3_UPLOAD=1
 | `SKIP_S3_UPLOAD` | No | Set to `1` to disable S3 uploads locally |
 | `MAX_OPPORTUNITIES_PER_SCRAPER` | No | Cap per run (default `10`) |
 
-For GitHub Actions, configure repository **secrets** `OPENAI_API_KEY`, `AWS_ROLE_ARN` and **variables** `AWS_S3_BUCKET_NAME`, `AWS_REGION`. The workflow assumes an IAM role trust policy for OIDC (`aws-actions/configure-aws-credentials@v4`).
+For GitHub Actions, configure **secrets** `OPENAI_API_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and **variables** `AWS_S3_BUCKET_NAME`, `AWS_REGION`.
 
 ## AWS S3 layout
 
