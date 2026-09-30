@@ -31,7 +31,11 @@ def gather_document_text(scraper: BaseScraper, opportunity: ScrapedOpportunity) 
         content, content_type = scraper.download_document(url)
         if not content:
             continue
-        if "pdf" in content_type or url.lower().endswith(".pdf"):
+        if (
+            "pdf" in content_type
+            or url.lower().endswith(".pdf")
+            or "/fs/resource-manager/view/" in url
+        ):
             pdf_text = extract_text_from_pdf(content)
             if pdf_text:
                 parts.append(pdf_text)

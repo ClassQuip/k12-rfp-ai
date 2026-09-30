@@ -1,10 +1,12 @@
 """Portal-specific scrapers for K-12 procurement sites."""
 
 from scrapers.base import BaseScraper, ScrapedOpportunity
-from scrapers.sample_portal import SamplePortalScraper
+from scrapers.ca_districts import CADistrictScraper
+from scrapers.tn_districts import TNDistrictScraper
 
 SCRAPER_REGISTRY: dict[str, type[BaseScraper]] = {
-    "sample": SamplePortalScraper,
+    "tn_districts": TNDistrictScraper,
+    "ca_districts": CADistrictScraper,
 }
 
 
@@ -21,7 +23,6 @@ def get_scrapers_for_state(state: str | None) -> list[BaseScraper]:
 __all__ = [
     "BaseScraper",
     "ScrapedOpportunity",
-    "SamplePortalScraper",
     "SCRAPER_REGISTRY",
     "get_scrapers_for_state",
 ]

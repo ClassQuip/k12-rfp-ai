@@ -8,7 +8,7 @@
 
 ## Features
 
-- Modular scrapers per state or district (`scrapers/`)
+- Modular scrapers per state or district (`scrapers/`), including **TN** and **CA** district site crawlers
 - PDF text extraction via `pypdf` / `pdfplumber`
 - Structured extraction with Pydantic `RFPAnalysis` schemas
 - S3 uploads with dated key prefixes (`rfps/` and `pdfs/`)
@@ -25,8 +25,9 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env with OPENAI_API_KEY and AWS settings
 python main.py --all
-# Or limit to one state:
-python main.py --state PA
+# Or limit to one state (TN / CA district crawlers):
+python main.py --state TN
+python main.py --state CA
 ```
 
 Relevant K-12 opportunities are printed as JSON to stdout. Set `SKIP_S3_UPLOAD=1` for local runs without AWS.
@@ -94,7 +95,11 @@ core/
   s3_uploader.py       # boto3 uploads
 scrapers/
   base.py              # Abstract BaseScraper
-  sample_portal.py     # Reference httpx/crawl4ai implementation
+  district_sites.py    # Shared district crawl + PDF / Finalsite detection
+  district_seeds.py    # Curated TN / CA district entry URLs
+  tn_districts.py      # Tennessee district scraper
+  ca_districts.py      # California district scraper
+  sample_portal.py     # Legacy demo portal (BidNet landing page)
 .github/workflows/
   scraper.yml          # Scheduled daily scrape
 ```
