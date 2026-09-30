@@ -111,6 +111,7 @@ def main() -> int:
                         "pdf" in ctype
                         or doc_url.lower().endswith(".pdf")
                         or "/fs/resource-manager/view/" in doc_url
+                        or "cloudfront.net" in doc_url
                     ):
                         storage.upload_pdf(
                             pdf_bytes,

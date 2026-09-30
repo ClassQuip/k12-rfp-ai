@@ -35,6 +35,7 @@ def gather_document_text(scraper: BaseScraper, opportunity: ScrapedOpportunity) 
             "pdf" in content_type
             or url.lower().endswith(".pdf")
             or "/fs/resource-manager/view/" in url
+            or "cloudfront.net" in url
         ):
             pdf_text = extract_text_from_pdf(content)
             if pdf_text:

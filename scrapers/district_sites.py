@@ -64,7 +64,10 @@ class DistrictSitesScraper(BaseScraper):
         )
         self.max_depth = max_depth or int(os.getenv("DISTRICT_MAX_DEPTH", "2"))
         self.max_opportunities = max_opportunities or int(
-            os.getenv("DISTRICT_MAX_OPPORTUNITIES", "40")
+            os.getenv("DISTRICT_MAX_OPPORTUNITIES", "120")
+        )
+        self.max_opportunities_per_seed = int(
+            os.getenv("DISTRICT_MAX_OPPORTUNITIES_PER_SEED", "8")
         )
         self.user_agent = user_agent
         self.portal_name = f"district_sites_{state_code.lower()}"
@@ -80,14 +83,18 @@ class DistrictSitesScraper(BaseScraper):
         for seed in seeds:
             if yielded >= self.max_opportunities:
                 break
+            per_seed = 0
             for opp in self._crawl_district(seed):
                 key = opp.detail_url
                 if key in seen_docs:
                     continue
                 seen_docs.add(key)
                 yielded += 1
+                per_seed += 1
                 yield opp
                 if yielded >= self.max_opportunities:
+                    break
+                if per_seed >= self.max_opportunities_per_seed:
                     break
 
     def _crawl_district(self, seed: DistrictSeed) -> Iterator[ScrapedOpportunity]:
@@ -165,6 +172,20 @@ def _is_procurement_asset(url: str, link_text: str) -> bool:
             link_text
         )
 
+    if (
+        "cloudfront.net" in lower_url
+        and PROCUREMENT_TEXT.search(combined)
+        and not EXCLUDE_TEXT.search(combined)
+    ):
+        return True
+
+    if (
+        "/media/" in lower_url
+        and PROCUREMENT_TEXT.search(combined)
+        and not EXCLUDE_TEXT.search(combined)
+    ):
+        return True
+
     if lower_url.endswith(".pdf") or ".pdf?" in lower_url:
         if EXCLUDE_TEXT.search(combined):
             return False
@@ -178,6 +199,7 @@ def _is_procurement_asset(url: str, link_text: str) -> bool:
                 "/business-office/",
                 "/bid",
                 "/rfp",
+                "/media/",
             )
         ):
             return True
