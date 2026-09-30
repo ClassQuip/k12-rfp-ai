@@ -108,7 +108,10 @@ def main() -> int:
                 for doc_url in opportunity.document_urls[:3]:
                     pdf_bytes, ctype = scraper.download_document(doc_url)
                     if pdf_bytes and (
-                        "pdf" in ctype or doc_url.lower().endswith(".pdf")
+                        "pdf" in ctype
+                        or doc_url.lower().endswith(".pdf")
+                        or "/fs/resource-manager/view/" in doc_url
+                        or "cloudfront.net" in doc_url
                     ):
                         storage.upload_pdf(
                             pdf_bytes,
